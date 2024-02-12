@@ -11,6 +11,7 @@ function App() {
         <Router>
           <AuthProvider>
             <Routes>
+                <Route path={"/register"} element={<Register />} />
               <Route path="/login" element={<Login />} />
                 <Route path={"/register"} element={<Register />} />
               <Route element={<PrivateRoute />}>
