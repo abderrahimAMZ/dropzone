@@ -1,18 +1,19 @@
-import { useCallback, useState } from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import { useDropzone} from 'react-dropzone';
 
 import Layout from '../components/Layout';
 import Container from '../components/Container';
 import FormRow from '../components/FormRow';
-import FormLabel from '../components/FormLabel';
-import InputText from '../components/InputText';
 import Button from '../components/Button';
 import axios from "axios";
 import {useAuth} from "../hooks/AuthProvider";
+import myImage from '../icons8-archive-30.png';
 
 
 function FileUploader() {
   const user = useAuth();
+  const [accepted_file, setAceepted_file] = useState("");
+  const [loading, setLoading] = useState(false);
   const onDrop = useCallback((acceptedFiles) => {
     const file = new FileReader;
 
@@ -20,11 +21,12 @@ function FileUploader() {
       setPreview(file.result);
     }
 
+    setAceepted_file(acceptedFiles[0].name);
     file.readAsDataURL(acceptedFiles[0])
   }, [])
 
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop
+  onDrop,
   });
 
   const [preview, setPreview] = useState(null);
@@ -34,6 +36,7 @@ function FileUploader() {
    */
 
   async function handleOnSubmit(e) {
+    var uploading = false;
     e.preventDefault();
 
     if ( typeof acceptedFiles[0] === 'undefined' ) return;
@@ -69,32 +72,24 @@ function FileUploader() {
     axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
     console.log('formData', formData);
     try {
+      setLoading(true);
     const response = await axios.post('http://localhost:8000/fileUpload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: "Bearer " + user.token,
       },
-    });
-    console.log(response.data);
+    }).then(r => {
+      console.log(r);
+      setLoading(false);
+    })
+
   } catch (error) {
     console.error('Error sending data:', error);
   }
-
-    /*
-
-    const results = await fetch('http://localhost:8000/save_user_info', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      body : formData
-    }).then(r => r.json());
-    console.log('results', results);
-
-     */
-
   }
+
+
+
 
   return (
     <Layout>
@@ -112,7 +107,7 @@ function FileUploader() {
               <input {...getInputProps()} />
               <div className="flex items-center justify-center w-full">
                 <label htmlFor="dropzone-file"
-                       className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                       className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray--500 dark:hover:bg-gray-600`}>
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -121,22 +116,36 @@ function FileUploader() {
                     </svg>
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
                       drag and drop</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">ZIP</p>
                   </div>
                   {
                     isDragActive ?
-                        <p>Drop the files here ...</p> :
-                        <p>Drag 'n' drop some files here, or click to select files</p>
+                        <p> Upload your file </p> :
+                        <p></p>
                   }
                 </label>
               </div>
             </div>
           </FormRow>
 
-          {preview && (
+          <div>
+          </div>
+          {preview ?
+              <div className={"flex items-center justify-center"}
+              >
+
+                <img src={myImage} alt="preview" /><p> {accepted_file} </p>
+              </div>
+              :
+                <p></p>
+            }
+
+
+          {loading && (
               <p className="mb-5">
-                <img src={preview} alt="Upload preview"/>
+                loding...
               </p>
+
           )}
 
           <Button>Submit</Button>
