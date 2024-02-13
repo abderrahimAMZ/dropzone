@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/AuthProvider";
 import Layout from "../components/Layout";
 import Container from "../components/Container";
+import {Link} from "react-router-dom";
 const Login = () => {
     const [input, setInput] = useState({
         username: "",
@@ -70,9 +71,9 @@ const Login = () => {
                                     in
                                 </button>
                                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                                    Don’t have an account yet? <a href="/Register"
+                                    Don’t have an account yet? <Link to="/register"
                                                                   class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign
-                                    up</a>
+                                    up</Link>
                                 </p>
                             </form>
                         </div>
