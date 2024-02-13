@@ -1,21 +1,25 @@
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import { useDropzone} from 'react-dropzone';
 
 import Layout from '../components/Layout';
 import Container from '../components/Container';
 import FormRow from '../components/FormRow';
-import Button from '../components/Button';
 import axios from "axios";
 import {useAuth} from "../hooks/AuthProvider";
 import myImage from '../icons8-archive-30.png';
 
 
 function FileUploader() {
-  const user = useAuth();
+  const context = useAuth();
+  useEffect(() => {
+    context.getUser()
+  },[]);
+
   const [accepted_file, setAceepted_file] = useState("");
   const [loading, setLoading] = useState(false);
   const [file_success, setFile_success] = useState(false);
   const [file_fail, setFile_fail] = useState(false);
+
   const onDrop = useCallback((acceptedFiles) => {
     const file = new FileReader;
 
@@ -83,13 +87,15 @@ function FileUploader() {
     console.log('formData', formData);
     try {
       setLoading(true);
+      context.getUser();
     const response = await axios.post('http://localhost:8000/fileUpload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: "Bearer " + user.token,
+        Authorization: "Bearer " + context.token,
       },
     }).then(r => {
       console.log(r);
+
       setLoading(false);
       setFile_success(true);
         setFile_fail(false);
@@ -110,6 +116,9 @@ function FileUploader() {
     <Layout>
 
       <Container>
+
+        <div className={"mt-20"}>
+
         <h1 className="text-6xl font-black text-center text-slate-900 mb-20">
           instagrampro.ai
         </h1>
@@ -185,20 +194,14 @@ function FileUploader() {
 
           </div>
 
-
-
-
-
-
-
-
           <button type="submit"
                   class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Upload
             file
           </button>
         </form>
-
+          </div>
       </Container>
+
     </Layout>
   )
 }

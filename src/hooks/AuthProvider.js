@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem("token") || "");
+    const [token, setToken] = useState(localStorage.getItem("instagramprotoken") || "");
     const navigate = useNavigate();
 
     const loginAction = async (data) => {
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
                 console.log(response.data);
                 if (response.data) {
                     setToken(response.data.access_token);
-                    localStorage.setItem("token", response.data.access_token);
+                    localStorage.setItem("instagramprotoken", response.data.access_token);
                     navigate("/");
                     return;
                 } else {
@@ -105,8 +105,32 @@ const AuthProvider = ({ children }) => {
         navigate("/login");
     };
 
+    const getUser = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/users/me', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem("instagramprotoken"),
+                },
+            });
+            console.log(response);
+            if (response.data) {
+                console.log(response.data);
+                setUser(response.data);
+                return;
+            } else {
+                navigate("/login");
+                throw new Error(response.message);
+            }
+
+        } catch (error) {
+            navigate("/login");
+            console.error('Error sending data:', error);
+        }
+
+    }
     return (
-        <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount }}>
+        <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount, getUser }}>
             {children}
         </AuthContext.Provider>
     );
