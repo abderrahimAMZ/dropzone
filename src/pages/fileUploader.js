@@ -37,10 +37,7 @@ function FileUploader() {
         "application/zip": ".zip"
     },
     onDropRejected : (fileRejections) => {
-      fileRejections.forEach(({file, errors}) => {
-
-          }
-      );
+        alert("File " + fileRejections[0].file.name + " was rejected. Errors: " + fileRejections[0].errors.map(e => e.message).join(", "));
     }});
 
   const [preview, setPreview] = useState(null);
@@ -59,27 +56,6 @@ function FileUploader() {
     console.log(acceptedFiles[0]);
     formData.append('file', acceptedFiles[0]);
 
-    /*
-    console.log('acceptedFiles[0]', acceptedFiles[0]);
-    console.log('preview', preview);
-
-     */
-    /*
-    // what does an upload preset do?
-    // https://cloudinary.com/documentation/upload_images#upload_presets
-    formData.append('upload_preset', '<Your Upload Preset>');
-    formData.append('api_key', import.meta.env.VITE_CLOUDINARY_API_KEY);
-
-     */
-
-
-    /*
-    const results = await fetch('https://api.cloudinary.com/v1_1/<Your Cloud Name>/image/upload', {
-      method: 'POST',
-      body: formData
-    }).then(r => r.json());
-
-     */
 
 // Set up additional headers if needed
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';

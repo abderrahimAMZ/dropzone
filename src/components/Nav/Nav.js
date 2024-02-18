@@ -50,7 +50,7 @@ const Nav = () => {
           <div>
             <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar"
                     onClick={handleMouseEnter}
-                    onMouseLeave={() => setTimeout(() => setIsDropdownOpen(false), 2000)}
+                    onMouseLeave={() => setTimeout(() => setIsDropdownOpen(false), 4000)}
 
 
                     className="flex text-sm md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
