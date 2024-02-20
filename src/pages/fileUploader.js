@@ -7,7 +7,7 @@ import FormRow from '../components/FormRow';
 import axios from "axios";
 import {useAuth} from "../hooks/AuthProvider";
 import myImage from '../icons8-archive-30.png';
-
+import {AlertInfo,AlertError,AlertSuccess} from "../components/Alerts";
 
 function FileUploader() {
   const context = useAuth();
@@ -19,26 +19,28 @@ function FileUploader() {
   const [loading, setLoading] = useState(false);
   const [file_success, setFile_success] = useState(false);
   const [file_fail, setFile_fail] = useState(false);
+  const [alert, setAlert] = useState(false);
+
+  const [responseMessage, setResponseMessage] = useState("");
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = new FileReader;
+
 
     file.onload = function() {
       setPreview(file.result);
     }
 
     setAceepted_file(acceptedFiles[0].name);
+    setFile_fail(false);
+    setFile_success(false);
+    setAlert(false);
     file.readAsDataURL(acceptedFiles[0])
   }, [])
 
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
   onDrop,
-    accept:  {
-        "application/zip": ".zip"
-    },
-    onDropRejected : (fileRejections) => {
-        alert("File " + fileRejections[0].file.name + " was rejected. Errors: " + fileRejections[0].errors.map(e => e.message).join(", "));
-    }});
+    });
 
   const [preview, setPreview] = useState(null);
 
@@ -63,7 +65,6 @@ function FileUploader() {
     console.log('formData', formData);
     try {
       setLoading(true);
-      context.getUser();
     const response = await axios.post('http://localhost:8000/fileUpload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -72,6 +73,7 @@ function FileUploader() {
     }).then(r => {
       console.log(r);
 
+      setResponseMessage(r.data.message);
       setLoading(false);
       setFile_success(true);
         setFile_fail(false);
@@ -81,8 +83,17 @@ function FileUploader() {
     setLoading(false);
     setFile_fail(true);
     setFile_success(false);
+    setResponseMessage(error.response.data.detail);
+
+
     console.error('Error sending data:', error);
   }
+    setAlert(true);
+    setTimeout(() => {
+      setAlert(false);
+
+    }, 10000);
+
   }
 
 
@@ -95,9 +106,27 @@ function FileUploader() {
 
         <div className={"mt-20"}>
 
+          <div className={"alert"}>
+            {alert ?
+                file_fail ?
+                <AlertError>
+                  {responseMessage}
+                </AlertError> :
+                file_success ?
+                <AlertSuccess>
+                  {responseMessage}
+                </AlertSuccess> :
+                    <div></div>
+                :
+                <div></div>
+            }
+          </div>
+          <div>
+
         <h1 className="text-6xl font-black text-center text-slate-900 mb-20">
           instagrampro.ai
         </h1>
+          </div>
 
         <form className="max-w-md border border-gray-200 rounded p-6 mx-auto" onSubmit={handleOnSubmit}>
 
