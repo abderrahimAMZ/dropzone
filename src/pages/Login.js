@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/AuthProvider";
 import Layout from "../components/Layout";
 import Container from "../components/Container";
 import {Link} from "react-router-dom";
+import AlertsComponent from "../components/AlertsComponent";
 const Login = () => {
     const [input, setInput] = useState({
         username: "",
@@ -10,7 +11,9 @@ const Login = () => {
     });
 
 
+
     const auth = useAuth();
+    auth.setSentVerification(false);
     const handleSubmitEvent = (e) => {
         console.log("input");
         console.log(input);
@@ -37,6 +40,7 @@ const Login = () => {
 
     return (
         <Layout>
+            <AlertsComponent />
 
             <section class="bg-gray-50 dark:bg-gray-900">
                 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -75,7 +79,7 @@ const Login = () => {
                                             <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
                                         </div>
                                     </div>
-                                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                                    <Link to="/resetPassword" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</Link>
                                 </div>
                                 <button type="submit"
                                         class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign

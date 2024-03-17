@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [file_success, setFile_success] = useState(false);
     const [file_fail, setFile_fail] = useState(false);
+    const [sentVerification, setSentVerification] = useState(false);
 
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
     axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
@@ -22,13 +23,7 @@ const AuthProvider = ({ children }) => {
     const removeAlertFromQueue = () => {
         setAlertQueue(prevQueue => {
             if (prevQueue.length > 0) {
-                // Find the last alert that is not of type 'info'
-                for (let i = prevQueue.length - 1; i >= 0; i--) {
-                    if (prevQueue[i].type !== 'info') {
-                        // If found, remove it and return the new queue
-                        return [...prevQueue.slice(0, i), ...prevQueue.slice(i + 1)];
-                    }
-                }
+                return prevQueue.slice(0, prevQueue.length-1);
             }
             // If no alert is found that is not of type 'info', return the queue as is
             return prevQueue;
@@ -55,16 +50,19 @@ const AuthProvider = ({ children }) => {
                 });
                 console.log(response.data);
                 if (response.data) {
+                    addAlertToQueue('success', "login successful");
                     setToken(response.data.access_token);
                     localStorage.setItem("instagramprotoken", response.data.access_token);
                     navigate("/");
                     return;
                 } else {
+                    addAlertToQueue('error', "username or password is incorrect please try again.");
                     throw new Error(response.message);
                 }
 
             }
              catch (error) {
+                 addAlertToQueue('error', "username or password is incorrect please try again.");
                 console.error('Error sending data:', error);
             }
 
@@ -86,15 +84,17 @@ const AuthProvider = ({ children }) => {
             });
             console.log(response.data);
             if (response.data) {
+                addAlertToQueue('info', response.data.message);
                 console.log(response.data);
                 navigate("/login");
                 return;
             } else {
-                throw new Error(response.message);
+                addAlertToQueue('error', response.data.message);
             }
 
         }
         catch (error) {
+            addAlertToQueue('error', "the email you entered is not valid it must have exactly one @ symbol");
             console.error('Error sending data:', error);
         }
 
@@ -106,6 +106,7 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem("site");
         setAlertQueue([]);
         navigate("/login");
+        addAlertToQueue('success', "You have been logged out")
     };
 
     const resendEmail = async (username) => {
@@ -123,9 +124,11 @@ const AuthProvider = ({ children }) => {
             });
             console.log(response.data);
             if (response.data) {
+                addAlertToQueue('info', response.data.message);
                 console.log(response.data);
                 return;
             } else {
+                addAlertToQueue('error', response.data.message);
                 throw new Error(response.message);
             }
 
@@ -189,10 +192,75 @@ const AuthProvider = ({ children }) => {
         }
 
     }
+    const sendVerificationCodeToEmail = async (data) => {
+        const formdata = new FormData();
+
+        formdata.set("email", data.email);
+
+        console.log("this is form data: ")
+        console.log(formdata);
+        try {
+            const response = await axios.post('http://localhost:8000/password-reset/request', formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data);
+            if (response.data) {
+                setSentVerification(true);
+                console.log(response.data);
+                addAlertToQueue('info', response.data.message);
+                return;
+            } else {
+                addAlertToQueue('error', response.data.message);
+            }
+
+        }
+        catch (error) {
+            addAlertToQueue('error', "the email you entered is not valid it must have exactly one @ symbol");
+            console.error('Error sending data:', error);
+        }
+    }
+    const changePassword = async (data) => {
+        const formdata = new FormData();
+
+        formdata.set("password", data.password);
+        formdata.set("code", data.code);
+
+
+        console.log("this is form data: ")
+        console.log(formdata);
+        try {
+            const response = await axios.post('http://localhost:8000/password-reset', formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data);
+            if (response.data) {
+                setTimeout(()=>setSentVerification(false), 4000);
+                console.log(response.data);
+                addAlertToQueue('success', response.data.message);
+                setTimeout(()=>navigate("/login"), 3000);
+                return;
+            } else {
+                addAlertToQueue('error', response.data.message);
+                throw new Error(response.message);
+            }
+
+        }
+        catch (error) {
+            addAlertToQueue('error', error.response.data.detail);
+            console.error('Error sending data:', error);
+        }
+
+    }
 
     // Function to remove alert from the queue after it's displayed
     return (
-        <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount, getUser, resendEmail,uploadFile,loading,file_fail,file_success,alertQueue,setAlertQueue,addAlertToQueue,removeAlertFromQueue, setFile_fail,setFile_success,setLoading}}>
+        <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount, getUser, resendEmail,uploadFile,loading,file_fail,file_success,alertQueue,setAlertQueue,addAlertToQueue,removeAlertFromQueue, setFile_fail,setFile_success,setLoading,
+            sendVerificationCodeToEmail, sentVerification, changePassword,setSentVerification
+        }}>
             {children}
         </AuthContext.Provider>
     );

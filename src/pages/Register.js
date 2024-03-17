@@ -3,8 +3,8 @@ import { useAuth } from "../hooks/AuthProvider";
 import Layout from "../components/Layout";
 import Container from "../components/Container";
 import {Link} from "react-router-dom";
+import AlertsComponent from "../components/AlertsComponent";
 const Login = () => {
-    const [samePassword, setSamePassword] = useState(true);
     const [input, setInput] = useState({
         username: "",
         email: "",
@@ -13,6 +13,7 @@ const Login = () => {
 
 
     const auth = useAuth();
+    auth.setSentVerification(false);
     const handleSubmitEvent = (e) => {
         console.log("input");
         console.log(input);
@@ -21,10 +22,9 @@ const Login = () => {
         console.log(confirm_password);
         if ( input.username !== "" && input.email !== "" && input.password !== "" ) {
             if (input.password !== confirm_password) {
-                alert("Passwords do not match");
+                auth.addAlertToQueue('error', "Passwords do not match")
             }
             else {
-                setSamePassword(true);
                 auth.CreateAccount(input);
 
             }
@@ -47,6 +47,7 @@ const Login = () => {
 
     return (
         <Layout>
+            <AlertsComponent />
                 <section class="bg-gray-50 dark:bg-gray-900">
                     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                         <h1 className="text-6xl font-black text-center text-slate-900 mb-20">
