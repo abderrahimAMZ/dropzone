@@ -55,9 +55,6 @@ function FileBrowser() {
 
                 </div>
 
-                <h1 className="text-6xl font-black text-center text-slate-900 mb-20">
-                    instagrampro.ai
-                </h1>
                 <div>
 
 

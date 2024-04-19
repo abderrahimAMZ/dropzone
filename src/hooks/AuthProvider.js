@@ -129,6 +129,7 @@ const AuthProvider = ({ children }) => {
         addAlertToQueue('success', "You have been logged out")
     };
 
+    // Function to resend email verification
     const resendEmail = async (username) => {
         const formdata = new FormData();
 
@@ -187,7 +188,7 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    const getUser = async (run_fetch_files=false) => {
+    const getUser = async () => {
         try {
             const response = await axios.get('http://localhost:8000/users/me', {
                 headers: {
@@ -198,7 +199,6 @@ const AuthProvider = ({ children }) => {
             console.log(response);
             if (response.data) {
                 console.log(response.data);
-                if (run_fetch_files) fetchFiles(response.data.username);
                 setUser(response.data);
                 return;
             }

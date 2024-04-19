@@ -84,18 +84,18 @@ function FileUploader() {
             {
                 context !== null && context.user != null && context.user.verified === false ?
                 <div className={"mb-4"}>
-                  <AlertInfo>Your account is not verified. Please check your email for the verification link.</AlertInfo>
+                  <AlertInfo>Your account is not verified. Please check your email for the verification link. You can also resend it from the link in your Profile!</AlertInfo>
                 </div> : <p></p>
             }
           </div>
 
           </div>
 
-        <h1 className="text-6xl font-black text-center text-slate-900 mb-20">
+        <h1 className="sm:text-5xl text-4xl font-black text-center text-slate-900 mb-20 sm:w-full">
           instagrampro.ai
         </h1>
         <div>
-        <form className="max-w-md border border-gray-200 rounded p-6 mx-auto" onSubmit={handleOnSubmit}>
+        <form className="sm:w-500px sm:m-auto  border border-gray-200 rounded p-6 mx-auto" onSubmit={handleOnSubmit}>
 
 
           <FormRow className="mb-5">

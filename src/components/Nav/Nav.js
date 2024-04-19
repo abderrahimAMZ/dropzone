@@ -42,9 +42,12 @@ const Nav = () => {
             </div>
             <div onMouseLeave={handleMouseEnter} className={`absolute z-50 ${isDropdownOpen ? "" : "hidden"} my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 p-4 mt-16 top-6 right-14`} id="language-dropdown-menu">
               <ul className="py-2 font-medium" role="none">
-                <li className={"mt-2"}>
-                  <p>{user != null ? user.email : ""}</p>
-                </li>
+                <div >
+                  <Link to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    Profile
+                  </Link>
+                </div>
                 <div >
                   <Link to="/browse-files"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
