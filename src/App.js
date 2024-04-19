@@ -5,6 +5,7 @@ import PrivateRoute from "./router/PrivateRoute";
 import Register from "./pages/Register";
 import FileUploader from "./pages/fileUploader";
 import PasswordReset from "./pages/PasswordReset";
+import FileBrowser from "./pages/FileBrowser";
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
             <Routes>
                 <Route path={"/register"} element={<Register />} />
                 <Route path="/resetPassword" element={<PasswordReset />} />
+                <Route element={<PrivateRoute />}>
+                <Route path={"/browse-files"} element={<FileBrowser />} />
+                </Route>
               <Route path="/login" element={<Login />} />
               <Route element={<PrivateRoute />}>
                 <Route path="/" element={<FileUploader />}></Route>

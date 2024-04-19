@@ -33,6 +33,26 @@ const AuthProvider = ({ children }) => {
 
 // Add this to your existing state variables
 
+    const fetchFiles = async (username) => {
+        try {
+            const response = await axios.get(`http://localhost:8000/users/${username}/files`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response);
+            if (response.data) {
+                console.log(response.data);
+                return response.data;
+            }
+            else {
+                throw new Error(response.message);
+            }
+
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    }
 
     const loginAction = async (data) => {
 
@@ -167,7 +187,7 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    const getUser = async () => {
+    const getUser = async (run_fetch_files=false) => {
         try {
             const response = await axios.get('http://localhost:8000/users/me', {
                 headers: {
@@ -178,6 +198,7 @@ const AuthProvider = ({ children }) => {
             console.log(response);
             if (response.data) {
                 console.log(response.data);
+                if (run_fetch_files) fetchFiles(response.data.username);
                 setUser(response.data);
                 return;
             }
@@ -259,7 +280,7 @@ const AuthProvider = ({ children }) => {
     // Function to remove alert from the queue after it's displayed
     return (
         <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount, getUser, resendEmail,uploadFile,loading,file_fail,file_success,alertQueue,setAlertQueue,addAlertToQueue,removeAlertFromQueue, setFile_fail,setFile_success,setLoading,
-            sendVerificationCodeToEmail, sentVerification, changePassword,setSentVerification
+            sendVerificationCodeToEmail, sentVerification, changePassword,setSentVerification, fetchFiles
         }}>
             {children}
         </AuthContext.Provider>

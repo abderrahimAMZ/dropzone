@@ -34,15 +34,28 @@ const Nav = () => {
                 className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Instagrampro.ai</span>
           </Link>
           <div className="flex flex-col md:order-2 space-x-2.5 md:space-x-2 rtl:space-x-reverse">
+            <div>
             <button onClick={handleMouseEnter}
                     type="button" data-dropdown-toggle="language-dropdown-menu" className="relative inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
                 {user != null ? user.username : "Login"}
             </button>
+            </div>
             <div onMouseLeave={handleMouseEnter} className={`absolute z-50 ${isDropdownOpen ? "" : "hidden"} my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 p-4 mt-16 top-6 right-14`} id="language-dropdown-menu">
               <ul className="py-2 font-medium" role="none">
                 <li className={"mt-2"}>
                   <p>{user != null ? user.email : ""}</p>
                 </li>
+                <div >
+                  <Link to="/browse-files"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    Browse Files
+                  </Link>
+                </div>
+                <div >
+                  <Link to="/"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload File
+                    </Link>
+                </div>
                 <li className={"mt-2"}>
                   <div >
                     <Link to="/login"
@@ -53,9 +66,6 @@ const Nav = () => {
                 </li>
               </ul>
             </div>
-            <button data-collapse-toggle="navbar-language" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-language" aria-expanded="false">
-              <span className="sr-only">Open main menu</span>
-            </button>
           </div>
         </div>
       </nav>

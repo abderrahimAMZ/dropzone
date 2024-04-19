@@ -14,6 +14,8 @@ function FileUploader() {
   const context = useAuth();
   useEffect(() => {
     context.getUser()
+    console.log("context")
+    console.log(context)
   },[]);
 
   const [accepted_file, setAceepted_file] = useState("");
