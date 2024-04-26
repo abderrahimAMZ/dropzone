@@ -11,6 +11,10 @@ const AuthProvider = ({ children }) => {
     const [file_success, setFile_success] = useState(false);
     const [file_fail, setFile_fail] = useState(false);
     const [sentVerification, setSentVerification] = useState(false);
+    const [showConfirmationBlock, setShowConfirmationBlock] = useState(false);
+    const [fileToDelete, setFileToDelete] = useState(null);
+    const [fileToRename, setFileToRename] = useState(null);
+    const [fileToDownload, setFileToDownload] = useState(null);
 
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
     axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
@@ -130,6 +134,31 @@ const AuthProvider = ({ children }) => {
     };
 
     // Function to resend email verification
+    const renameFile = async (fileName) => {
+    }
+    const deleteFile = async (file_id) => {
+        try {
+            const response = await axios.delete(`http://localhost:8000/fileDelete/${file_id}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+            console.log(response.data);
+            if (response.data) {
+                addAlertToQueue('success', response.data.message);
+                console.log(response.data);
+                return;
+            } else {
+                addAlertToQueue('error', response.data.message);
+                throw new Error(response.message);
+            }
+
+        }
+        catch (error) {
+            console.error('Error sending data:', error);
+        }
+    }
     const resendEmail = async (username) => {
         const formdata = new FormData();
 
@@ -280,7 +309,8 @@ const AuthProvider = ({ children }) => {
     // Function to remove alert from the queue after it's displayed
     return (
         <AuthContext.Provider value={{ token, user, loginAction, logOut,CreateAccount, getUser, resendEmail,uploadFile,loading,file_fail,file_success,alertQueue,setAlertQueue,addAlertToQueue,removeAlertFromQueue, setFile_fail,setFile_success,setLoading,
-            sendVerificationCodeToEmail, sentVerification, changePassword,setSentVerification, fetchFiles
+            sendVerificationCodeToEmail, sentVerification, changePassword,setSentVerification, fetchFiles, renameFile, deleteFile, showConfirmationBlock, setShowConfirmationBlock,
+            fileToDelete, setFileToDelete, fileToRename, setFileToRename, fileToDownload, setFileToDownload
         }}>
             {children}
         </AuthContext.Provider>

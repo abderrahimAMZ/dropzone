@@ -9,8 +9,28 @@ import {useAuth} from "../hooks/AuthProvider";
 import myImage from '../icons8-archive-30.png';
 import {AlertInfo,AlertError,AlertSuccess} from "../components/Alerts";
 import {Link} from "wouter";
+import DeleteButton from "../components/DeleteButton";
+import DeleteConfirmation from "../components/DeleteConfirmation";
 
 function FileBrowser() {
+    function convertSize(sizeBytes) {
+        if (sizeBytes === 0) {
+            return "0B";
+        }
+        const sizeNames = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        const i = Math.floor(Math.log(sizeBytes) / Math.log(1024));
+        const p = Math.pow(1024, i);
+        const s = sizeBytes / p;
+        return `${s.toFixed(2)} ${sizeNames[i]}`;
+    }
+    function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+// Usage
+    const sizeInBytes = 1234567890;
+    console.log(convertSize(sizeInBytes));  // Outputs: '1.15 GB'
     const context = useAuth();
     useEffect(() => {
 
@@ -58,15 +78,12 @@ function FileBrowser() {
                 <div>
 
 
-                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg sm:mr-12 sm:ml-12">
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
                                     File name
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    File type
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     File size
@@ -81,24 +98,22 @@ function FileBrowser() {
                             </thead>
                             <tbody>
                             {
-                               context.user != null ? context.user.files.map((file, index) => {
-                                   console.log(context);
+                               context.user != null ? context.user.files.slice().reverse().map((file, index) => {
                                       return (
-                                        <tr key={index} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                        <tr key={index} className="bg-white dark:bg-gray-900 hover:bg-gray-100 hover:dark:bg-gray-800 border-b dark:border-gray-700">
                                              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                   {file.filename}
                                              </th>
                                              <td className="px-6 py-4">
-                                                 {file.content_type}
+                                                 {convertSize(Number(file.length))}
                                              </td>
                                              <td className="px-6 py-4">
-                                                 {file.length}
+                                                  {formatDate(file.upload_date)}
                                              </td>
                                              <td className="px-6 py-4">
-                                                  {file.upload_date}
-                                             </td>
-                                             <td className="px-6 py-4">
-                                                  <Link href={`/file/${file.filename}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</Link>
+                                                 <div className={"flex flex-row "}>
+                                                     <DeleteButton props={file} />
+                                                 </div>
                                              </td>
                                         </tr>
                                       );
@@ -107,6 +122,14 @@ function FileBrowser() {
                             }
                             </tbody>
                         </table>
+                    </div>
+                    <div>
+
+                    {
+                        context.showConfirmationBlock ?
+                            <DeleteConfirmation file={context.fileToDelete} />
+                            : <p></p>
+                    }
                     </div>
 
 
