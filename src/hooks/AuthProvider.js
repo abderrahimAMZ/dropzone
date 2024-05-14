@@ -21,13 +21,14 @@ const AuthProvider = ({ children }) => {
 
     const [alertQueue, setAlertQueue] = useState([]);
     const addAlertToQueue = (type, message) => {
+        setTimeout(()=>removeAlertFromQueue(),5000);
         setAlertQueue(prevQueue => [...prevQueue, { type, message }]);
     };
     // Function to remove alert from the queue after it's displayed
     const removeAlertFromQueue = () => {
         setAlertQueue(prevQueue => {
             if (prevQueue.length > 0) {
-                return prevQueue.slice(0, prevQueue.length-1);
+                setAlertQueue(prevQueue.slice(1));
             }
             // If no alert is found that is not of type 'info', return the queue as is
             return prevQueue;

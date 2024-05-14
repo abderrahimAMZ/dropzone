@@ -25,27 +25,25 @@ const Nav = () => {
   return (
 
 
-      <nav className="bg-white border-gray-200 dark:bg-gray-900">
+      <nav className="bg-gray-50 border-gray-200 dark:bg-gray-900 shadow-sm">
 
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="max-w-screen-xl flex  items-center justify-between mx-auto p-4">
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src={instaImage} className="h-8" alt="Flowbite Logo"/>
             <span
                 className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Instagrampro.ai</span>
           </Link>
           <div className="flex flex-col md:order-2 space-x-2.5 md:space-x-2 rtl:space-x-reverse">
-            <div>
-            <button onClick={handleMouseEnter}
+            <div className={"relative"}>
+            <button id={"idk"} onClick={handleMouseEnter}
                     type="button" data-dropdown-toggle="language-dropdown-menu" className="relative inline-flex items-center font-medium justify-center px-4 py-2 text-sm text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
                 {user != null ? user.username : "Login"}
             </button>
-            </div>
-            <div onMouseLeave={handleMouseEnter} className={`absolute z-50 ${isDropdownOpen ? "" : "hidden"} my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 p-4 mt-16 top-6 right-14`} id="language-dropdown-menu">
+            <div onMouseLeave={handleMouseEnter} className={`w-170px p-4 absolute z-50 ${isDropdownOpen ? "" : "hidden"} my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 p-4 mt-10 top-6 right-10`} id="language-dropdown-menu">
               <ul className="py-2 font-medium" role="none">
                 <div >
-                  <Link to="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                    Profile
+                  <Link to="/"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload File
                   </Link>
                 </div>
                 <div >
@@ -55,9 +53,10 @@ const Nav = () => {
                   </Link>
                 </div>
                 <div >
-                  <Link to="/"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Upload File
-                    </Link>
+                  <Link to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    Profile
+                  </Link>
                 </div>
                 <li className={"mt-2"}>
                   <div >
@@ -68,6 +67,7 @@ const Nav = () => {
                   </div>
                 </li>
               </ul>
+            </div>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import {useAuth} from "../hooks/AuthProvider";
 import myImage from '../icons8-archive-30.png';
 import {AlertInfo,AlertError,AlertSuccess} from "../components/Alerts";
 import {Link} from "wouter";
+import AlertsComponent from "../components/AlertsComponent";
 
 function FileUploader() {
   const context = useAuth();
@@ -63,24 +64,11 @@ function FileUploader() {
 
   return (
     <Layout>
+      <AlertsComponent />
 
-      <Container>
+        <div className={"mt-10"}>
 
-        <div className={"mt-20"}>
-
-          <div className={"alerts"}>
-            {
-                context.alertQueue.map((alert, index) => {
-                  setTimeout(()=>context.removeAlertFromQueue(), 10000);
-                  return (
-                      <div key={index} className={"mb-4"}>
-                        {alert.type === 'info' && <AlertInfo>{alert.message}</AlertInfo>}
-                        {alert.type === 'error' && <AlertError>{alert.message}</AlertError>}
-                        {alert.type === 'success' && <AlertSuccess>{alert.message}</AlertSuccess>}
-                      </div>
-                  );
-                })
-            }
+          <div classname={"alerts"}>
             {
                 context !== null && context.user != null && context.user.verified === false ?
                 <div className={"mb-4"}>
@@ -172,7 +160,6 @@ function FileUploader() {
           </button>
         </form>
           </div>
-      </Container>
 
     </Layout>
   )

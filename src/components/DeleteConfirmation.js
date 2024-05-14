@@ -7,7 +7,7 @@ const DeleteConfirmation = (props) => {
     const context = useAuth();
     return (
         <div>
-    <div id="deleteModal" tabindex="-1" aria-="true" className=" overflow-y-auto overflow-x- fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+    <div id="deleteModal" tabindex="-1" aria-="true" className=" overflow-y-auto overflow-x- fixed top-4 right-4 left-4 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
         <div className="relative p-4 w-full max-w-md h-full md:h-auto">
             <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
                 <button onClick={()=> {

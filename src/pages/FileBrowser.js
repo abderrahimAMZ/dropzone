@@ -11,6 +11,8 @@ import {AlertInfo,AlertError,AlertSuccess} from "../components/Alerts";
 import {Link} from "wouter";
 import DeleteButton from "../components/DeleteButton";
 import DeleteConfirmation from "../components/DeleteConfirmation";
+import noFilesImage from '../no-file.png';
+import AlertsComponent from "../components/AlertsComponent";
 
 function FileBrowser() {
     function convertSize(sizeBytes) {
@@ -29,8 +31,6 @@ function FileBrowser() {
 }
 
 // Usage
-    const sizeInBytes = 1234567890;
-    console.log(convertSize(sizeInBytes));  // Outputs: '1.15 GB'
     const context = useAuth();
     useEffect(() => {
 
@@ -48,23 +48,11 @@ function FileBrowser() {
     return (
         <Layout>
 
-            <Container>
 
                 <div className={"mt-20"}>
 
                     <div className={"alerts"}>
-                        {
-                            context.alertQueue.map((alert, index) => {
-                                setTimeout(()=>context.removeAlertFromQueue(), 10000);
-                                return (
-                                    <div key={index} className={"mb-4"}>
-                                        {alert.type === 'info' && <AlertInfo>{alert.message}</AlertInfo>}
-                                        {alert.type === 'error' && <AlertError>{alert.message}</AlertError>}
-                                        {alert.type === 'success' && <AlertSuccess>{alert.message}</AlertSuccess>}
-                                    </div>
-                                );
-                            })
-                        }
+                        <AlertsComponent />
                         {
                             context !== null && context.user != null && context.user.verified === false ?
                                 <div className={"mb-4"}>
@@ -78,6 +66,12 @@ function FileBrowser() {
                 <div>
 
 
+                    {context.user != null && context.user.files.length == 0 ?
+                        <div>
+                        <img src={noFilesImage} alt="no have no files" />
+                        <h1 className={"text-center"}>You haven't uploaded any files yet!</h1>
+                        </div>
+                        :
                     <div className="relative overflow-x-auto shadow-md sm:rounded-lg sm:mr-12 sm:ml-12">
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -98,7 +92,8 @@ function FileBrowser() {
                             </thead>
                             <tbody>
                             {
-                               context.user != null ? context.user.files.slice().reverse().map((file, index) => {
+                                // how to check if a user has files
+                               context.user != null && context.user.files.length != 0 ? context.user.files.slice().reverse().map((file, index) => {
                                       return (
                                         <tr key={index} className="bg-white dark:bg-gray-900 hover:bg-gray-100 hover:dark:bg-gray-800 border-b dark:border-gray-700">
                                              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -118,13 +113,15 @@ function FileBrowser() {
                                         </tr>
                                       );
                                  })
-                                   : <div></div>
+                                   : <div>
+                                   <h1>You haven't uploaded any files yet!</h1>
+                                   </div>
                             }
                             </tbody>
                         </table>
                     </div>
+                    }
                     <div>
-
                     {
                         context.showConfirmationBlock ?
                             <DeleteConfirmation file={context.fileToDelete} />
@@ -132,9 +129,7 @@ function FileBrowser() {
                     }
                     </div>
 
-
                 </div>
-            </Container>
 
         </Layout>
     )
