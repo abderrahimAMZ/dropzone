@@ -61,35 +61,35 @@ const AuthProvider = ({ children }) => {
 
     const loginAction = async (data) => {
 
-            const formdata = new FormData();
+        const formdata = new FormData();
 
-            formdata.set("username", data.username);
-            formdata.set("password", data.password);
+        formdata.set("username", data.username);
+        formdata.set("password", data.password);
 
-            console.log(formdata);
-            try {
-                const response = await axios.post('http://localhost:8000/token', formdata, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                console.log(response.data);
-                if (response.data) {
-                    addAlertToQueue('success', "login successful");
-                    setToken(response.data.access_token);
-                    localStorage.setItem("instagramprotoken", response.data.access_token);
-                    navigate("/");
-                    return;
-                } else {
-                    addAlertToQueue('error', "username or password is incorrect please try again.");
-                    throw new Error(response.message);
-                }
-
+        console.log(formdata);
+        try {
+            const response = await axios.post('http://localhost:8000/token', formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data);
+            if (response.data) {
+                addAlertToQueue('success', "login successful");
+                setToken(response.data.access_token);
+                localStorage.setItem("instagramprotoken", response.data.access_token);
+                navigate("/");
+                return;
+            } else {
+                addAlertToQueue('error', "username or password is incorrect please try again.");
+                throw new Error(response.message);
             }
-             catch (error) {
-                 addAlertToQueue('error', "username or password is incorrect please try again.");
-                console.error('Error sending data:', error);
-            }
+
+        }
+        catch (error) {
+            addAlertToQueue('error', "username or password is incorrect please try again.");
+            console.error('Error sending data:', error);
+        }
 
     };
     const CreateAccount = async (data) => {

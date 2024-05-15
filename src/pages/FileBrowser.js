@@ -67,8 +67,8 @@ function FileBrowser() {
 
 
                     {context.user != null && context.user.files.length == 0 ?
-                        <div>
-                        <img src={noFilesImage} alt="no have no files" />
+                        <div className={"flex flex-col justify-center"}>
+                        <img className={"sm:w-1/5 w-4/5 m-auto"} src={noFilesImage} alt="no have no files" />
                         <h1 className={"text-center"}>You haven't uploaded any files yet!</h1>
                         </div>
                         :
